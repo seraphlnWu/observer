@@ -1,0 +1,20 @@
+# coding=utf8
+#
+
+LOG_PATH = '/var/log/active_spider/'
+ONE_HOUR = 60 * 60.
+SEARCH_TIMEOUT = 10.0
+
+
+users = [
+    ('bestminr_11@163.com', 'data520', 1),
+    ('bestminr_12@163.com', 'data520', 2),
+    ('bestminr_13@163.com', 'data520', 3),
+    ('bestminr_14@163.com', 'data520', 4),
+    ('bestminr_15@163.com', 'data520', 5),
+    ('bestminr_16@163.com', 'data520', 6),
+    ('bestminr_17@163.com', 'data520', 7),
+    ('bestminr_18@163.com', 'data520', 8),
+    ('bestminr_19@163.com', 'data520', 9),
+    ('bestminr_20@163.com', 'data520', 10),
+]

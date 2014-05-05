@@ -14,3 +14,16 @@ try:
 except ImportError:
     import simplejson as json
 
+
+
+def wait(seconds):
+    ''' 模拟sleep '''
+    def dummy():
+        return
+
+    return task.deferLater(reactor, seconds, dummy)
+
+
+def hex_encode_bytes(s):
+    ''' '''
+    return ''.join('%02x' % ord(c) for c in s)
