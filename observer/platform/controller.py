@@ -158,40 +158,33 @@ class ControllerService(ControllerServiceBase):
             #FIXME
 
     def load_tasks(self):
-        '''
-        load tasks from files;
-
-        in fact at first, I load tasks from mongodb,
-        but I met a bug is: sometimes I cannot read data from mongodb
-            when the controller node running a long time
-        so I changed to load file instead of mongodb
-        '''
+        ''' load tasks from mongodb '''
         now = time.time()
+        conn = pymongo.Connection(self.cfg.mongo_host, self.cfg.mongo_port)
+        db = conn[self.cfg.mongo_dbname]
 
-        with open(self.cfg.keywords_file) as fp:
-            for l in fp.readlines():
-                keyword = json.loads(l)
-                kid = keyword.get('_id')    # you know, mongodb..
-                priority = keyword.get('priority', 1)
-                if keyword.get('is_del', False):
-                    abandoned[kid] = keyword
-                    continue
+        for l in db[self.cfg.task_collection].find():
+            kid = keyword.get('_id')
+            priority = keyword.get('priority', 1)
+            if keyword.get('is_del', False):
+                abandoned[kid] = keyword
+                continue
 
-                if all([
-                    self.min_priority is not None,
-                    priority < self.min_priority,
-                ]):
-                    # lower priority
-                    continue
+            if all([
+                self.min_priority is not None,
+                priority < self.min_priority,
+            ]):
+                # lower priority
+                continue
 
-                if all([
-                    self.max_priority is not None,
-                    priority > self.max_priority,
-                ]):
-                    # higher priority
-                    continue
+            if all([
+                self.max_priority is not None,
+                priority > self.max_priority,
+            ]):
+                # higher priority
+                continue
 
-                self.add_keyword_freq(kid, now)
-                self.keywords[kid] = keyword
+            self.add_keyword_freq(kid, now)
+            self.keywords[kid] = keyword
 
-            reactor.callLater(LOAD_INTERVAL, self.load_tasks)
+        reactor.callLater(LOAD_INTERVAL, self.load_tasks)
